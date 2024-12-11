@@ -16,7 +16,6 @@ use Phue\Rule;
  */
 class GetRules implements CommandInterface
 {
-
     /**
      * Send command
      *
@@ -25,14 +24,14 @@ class GetRules implements CommandInterface
      *
      * @return Rule[] List of Rule objects
      */
-    public function send(Client $client)
+    public function send(Client $client): array
     {
         // Get response
         $results = $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/rules"
         );
         
-        $rules = array();
+        $rules = [];
         
         foreach ($results as $ruleId => $attributes) {
             $rules[$ruleId] = new Rule($ruleId, $attributes, $client);

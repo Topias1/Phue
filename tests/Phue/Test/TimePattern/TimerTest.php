@@ -13,7 +13,7 @@ use Phue\TimePattern\Timer;
 /**
  * Tests for Phue\TimePattern\Timer
  */
-class TimerTest extends \PHPUnit_Framework_TestCase
+class TimerTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

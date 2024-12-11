@@ -13,21 +13,40 @@ namespace Phue\LightModel;
  */
 abstract class AbstractLightModel
 {
-
     /**
      * Model id
+     *
+     * @var string
      */
-    const MODEL_ID = 'model id';
+    protected $modelId;
 
     /**
      * Model name
+     *
+     * @var string
      */
-    const MODEL_NAME = 'model name';
+    protected $modelName;
 
     /**
      * Can retain state
+     *
+     * @var bool
      */
-    const CAN_RETAIN_STATE = false;
+    protected $canRetainState;
+
+    /**
+     * AbstractLightModel constructor.
+     *
+     * @param string $modelId
+     * @param string $modelName
+     * @param bool $canRetainState
+     */
+    public function __construct($modelId, $modelName, $canRetainState)
+    {
+        $this->modelId = $modelId;
+        $this->modelName = $modelName;
+        $this->canRetainState = $canRetainState;
+    }
 
     /**
      * Get model id
@@ -36,7 +55,7 @@ abstract class AbstractLightModel
      */
     public function getId()
     {
-        return static::MODEL_ID;
+        return $this->modelId;
     }
 
     /**
@@ -46,7 +65,7 @@ abstract class AbstractLightModel
      */
     public function getName()
     {
-        return static::MODEL_NAME;
+        return $this->modelName;
     }
 
     /**
@@ -56,7 +75,7 @@ abstract class AbstractLightModel
      */
     public function canRetainState()
     {
-        return static::CAN_RETAIN_STATE;
+        return $this->canRetainState;
     }
 
     /**

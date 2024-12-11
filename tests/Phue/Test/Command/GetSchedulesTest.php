@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetSchedules
  */
-class GetSchedulesTest extends \PHPUnit_Framework_TestCase
+class GetSchedulesTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getSchedules = new GetSchedules();
         

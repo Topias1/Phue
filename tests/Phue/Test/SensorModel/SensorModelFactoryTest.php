@@ -13,7 +13,7 @@ use Phue\SensorModel\SensorModelFactory;
 /**
  * Tests for Phue\SensorModel\SensorModelFactory
  */
-class SensorModelFactoryTest extends \PHPUnit_Framework_TestCase
+class SensorModelFactoryTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

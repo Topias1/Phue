@@ -13,6 +13,28 @@ namespace Phue\Helper;
  */
 class ColorConversion
 {
+    // Constants for the Wide RGB D65 conversion formula
+    const RGB_TO_XYZ_COEFFICIENTS = [
+        'red' => [0.664511, 0.154324, 0.162028],
+        'green' => [0.283881, 0.668433, 0.047685],
+        'blue' => [0.000000, 0.072310, 0.986039]
+    ];
+
+    const XYZ_TO_RGB_COEFFICIENTS = [
+        'red' => [1.656492, -0.354851, -0.255038],
+        'green' => [-0.707196, 1.655397, 0.036152],
+        'blue' => [0.051713, -0.121364, 1.011530]
+    ];
+
+    // Gamma correction constants
+    const GAMMA_THRESHOLD = 0.04045;
+    const GAMMA_SCALE = 12.92;
+    const GAMMA_EXPONENT = 2.4;
+    const GAMMA_OFFSET = 0.055;
+    
+    const REVERSE_GAMMA_THRESHOLD = 0.0031308;
+    const REVERSE_GAMMA_SCALE = 1.0 / 2.4;
+
     /**
      * Converts RGB values to XY values
      * Based on: http://stackoverflow.com/a/22649803
@@ -23,41 +45,43 @@ class ColorConversion
      *
      * @return array x, y, bri key/value
      */
-    public static function convertRGBToXY($red, $green, $blue)
+    public static function convertRGBToXY(int $red, int $green, int $blue): array
     {
         // Normalize the values to 1
-        $normalizedToOne['red'] = $red / 255;
-        $normalizedToOne['green'] = $green / 255;
-        $normalizedToOne['blue'] = $blue / 255;
+        $normalizedToOne = [
+            'red' => $red / 255,
+            'green' => $green / 255,
+            'blue' => $blue / 255
+        ];
 
         // Make colors more vivid
         foreach ($normalizedToOne as $key => $normalized) {
-            if ($normalized > 0.04045) {
-                $color[$key] = pow(($normalized + 0.055) / (1.0 + 0.055), 2.4);
-            } else {
-                $color[$key] = $normalized / 12.92;
-            }
+            $color[$key] = $normalized > self::GAMMA_THRESHOLD
+                ? pow(($normalized + self::GAMMA_OFFSET) / (1.0 + self::GAMMA_OFFSET), self::GAMMA_EXPONENT)
+                : $normalized / self::GAMMA_SCALE;
         }
 
         // Convert to XYZ using the Wide RGB D65 formula
-        $xyz['x'] = $color['red'] * 0.664511 + $color['green'] * 0.154324 + $color['blue'] * 0.162028;
-        $xyz['y'] = $color['red'] * 0.283881 + $color['green'] * 0.668433 + $color['blue'] * 0.047685;
-        $xyz['z'] = $color['red'] * 0.000000 + $color['green'] * 0.072310 + $color['blue'] * 0.986039;
+        $xyz = [
+            'x' => $color['red'] * self::RGB_TO_XYZ_COEFFICIENTS['red'][0] + $color['green'] * self::RGB_TO_XYZ_COEFFICIENTS['green'][0] + $color['blue'] * self::RGB_TO_XYZ_COEFFICIENTS['blue'][0],
+            'y' => $color['red'] * self::RGB_TO_XYZ_COEFFICIENTS['red'][1] + $color['green'] * self::RGB_TO_XYZ_COEFFICIENTS['green'][1] + $color['blue'] * self::RGB_TO_XYZ_COEFFICIENTS['blue'][1],
+            'z' => $color['red'] * self::RGB_TO_XYZ_COEFFICIENTS['red'][2] + $color['green'] * self::RGB_TO_XYZ_COEFFICIENTS['green'][2] + $color['blue'] * self::RGB_TO_XYZ_COEFFICIENTS['blue'][2]
+        ];
 
         // Calculate the x/y values
-        if (array_sum($xyz) == 0) {
-            $x = 0;
-            $y = 0;
+        $sum = array_sum($xyz);
+        if ($sum == 0) {
+            $x = $y = 0;
         } else {
-            $x = $xyz['x'] / array_sum($xyz);
-            $y = $xyz['y'] / array_sum($xyz);
+            $x = $xyz['x'] / $sum;
+            $y = $xyz['y'] / $sum;
         }
 
-        return array(
+        return [
             'x'   => $x,
             'y'   => $y,
             'bri' => round($xyz['y'] * 255)
-        );
+        ];
     }
 
     /**
@@ -69,25 +93,29 @@ class ColorConversion
      *
      * @return array red, green, blue key/value
      */
-    public static function convertXYToRGB($x, $y, $bri = 255)
+    public static function convertXYToRGB(float $x, float $y, int $bri = 255): array
     {
         // Calculate XYZ
         $z = 1.0 - $x - $y;
-        $xyz['y'] = $bri / 255;
-        $xyz['x'] = ($xyz['y'] / $y) * $x;
-        $xyz['z'] = ($xyz['y'] / $y) * $z;
+        $xyz = [
+            'y' => $bri / 255,
+            'x' => ($xyz['y'] / $y) * $x,
+            'z' => ($xyz['y'] / $y) * $z
+        ];
 
         // Convert to RGB using Wide RGB D65 conversion
-        $color['red'] = $xyz['x'] * 1.656492 - $xyz['y'] * 0.354851 - $xyz['z'] * 0.255038;
-        $color['green'] = -$xyz['x'] * 0.707196 + $xyz['y'] * 1.655397 + $xyz['z'] * 0.036152;
-        $color['blue'] = $xyz['x'] * 0.051713 - $xyz['y'] * 0.121364 + $xyz['z'] * 1.011530;
+        $color = [
+            'red' => $xyz['x'] * self::XYZ_TO_RGB_COEFFICIENTS['red'][0] + $xyz['y'] * self::XYZ_TO_RGB_COEFFICIENTS['red'][1] + $xyz['z'] * self::XYZ_TO_RGB_COEFFICIENTS['red'][2],
+            'green' => $xyz['x'] * self::XYZ_TO_RGB_COEFFICIENTS['green'][0] + $xyz['y'] * self::XYZ_TO_RGB_COEFFICIENTS['green'][1] + $xyz['z'] * self::XYZ_TO_RGB_COEFFICIENTS['green'][2],
+            'blue' => $xyz['x'] * self::XYZ_TO_RGB_COEFFICIENTS['blue'][0] + $xyz['y'] * self::XYZ_TO_RGB_COEFFICIENTS['blue'][1] + $xyz['z'] * self::XYZ_TO_RGB_COEFFICIENTS['blue'][2]
+        ];
 
         foreach ($color as $key => $normalized) {
             // Apply reverse gamma correction
-            if ($normalized <= 0.0031308) {
-                $color[$key] = 12.92 * $normalized;
+            if ($normalized <= self::REVERSE_GAMMA_THRESHOLD) {
+                $color[$key] = self::GAMMA_SCALE * $normalized;
             } else {
-                $color[$key] = (1.0 + 0.055) * pow($normalized, 1.0 / 2.4) - 0.055;
+                $color[$key] = (1.0 + self::GAMMA_OFFSET) * pow($normalized, self::REVERSE_GAMMA_SCALE) - self::GAMMA_OFFSET;
             }
 
             // Scale back from a maximum of 1 to a maximum of 255

@@ -13,13 +13,13 @@ use Phue\Transport\Adapter\Curl as CurlAdapter;
 /**
  * Tests for Phue\Transport\Adapter\Curl
  */
-class CurlTest extends \PHPUnit_Framework_TestCase
+class CurlTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         try {
             $this->curlAdapter = new CurlAdapter();

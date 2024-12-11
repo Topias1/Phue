@@ -15,13 +15,13 @@ use Phue\Group;
 /**
  * Tests for Phue\Group
  */
-class GroupTest extends \PHPUnit_Framework_TestCase
+class GroupTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockClient = $this->createMock('\Phue\Client', 

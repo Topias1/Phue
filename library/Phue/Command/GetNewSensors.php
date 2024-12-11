@@ -15,20 +15,19 @@ use Phue\Client;
  */
 class GetNewSensors implements CommandInterface
 {
-
     /**
      * Last scan
      *
-     * @var string
+     * @var string|null
      */
-    protected $lastScan;
+    protected ?string $lastScan = null;
 
     /**
      * Found sensors
      *
      * @var array
      */
-    protected $sensors = array();
+    protected array $sensors = [];
 
     /**
      * Send command
@@ -38,7 +37,7 @@ class GetNewSensors implements CommandInterface
      *
      * @return self This object
      */
-    public function send(Client $client)
+    public function send(Client $client): self
     {
         // Get response
         $response = $client->getTransport()->sendRequest(
@@ -63,7 +62,7 @@ class GetNewSensors implements CommandInterface
      *
      * @return array List of new sensors
      */
-    public function getSensors()
+    public function getSensors(): array
     {
         return $this->sensors;
     }
@@ -73,8 +72,8 @@ class GetNewSensors implements CommandInterface
      *
      * @return bool True if active, false if not
      */
-    public function isScanActive()
+    public function isScanActive(): bool
     {
-        return $this->lastScan == 'active';
+        return $this->lastScan === 'active';
     }
 }

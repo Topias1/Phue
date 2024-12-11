@@ -13,7 +13,7 @@ use Phue\TimePattern\RandomizedTime;
 /**
  * Tests for Phue\TimePattern\RandomizedTime
  */
-class RandomizedTimeTest extends \PHPUnit_Framework_TestCase
+class RandomizedTimeTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

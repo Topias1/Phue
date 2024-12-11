@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetUsers
  */
-class GetUsersTest extends \PHPUnit_Framework_TestCase
+class GetUsersTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getUsers = new GetUsers();
         

@@ -13,7 +13,7 @@ use Phue\TimePattern\RecurringTime;
 /**
  * Tests for Phue\TimePattern\RecurringTime
  */
-class RecurringTimeTest extends \PHPUnit_Framework_TestCase
+class RecurringTimeTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

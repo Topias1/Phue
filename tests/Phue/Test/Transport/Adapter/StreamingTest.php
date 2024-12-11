@@ -13,13 +13,13 @@ use Phue\Transport\Adapter\Streaming as StreamingAdapter;
 /**
  * Tests for Phue\Transport\Adapter\Streaming
  */
-class StreamingTest extends \PHPUnit_Framework_TestCase
+class StreamingTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->streamingAdapter = new StreamingAdapter();
     }

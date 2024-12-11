@@ -14,13 +14,13 @@ use Phue\Client;
 /**
  * Tests for Phue\Bridge
  */
-class BridgeTest extends \PHPUnit_Framework_TestCase
+class BridgeTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockClient = $this->createMock('\Phue\Client', 

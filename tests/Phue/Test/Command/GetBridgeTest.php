@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetBridge
  */
-class GetBridgeTest extends \PHPUnit_Framework_TestCase
+class GetBridgeTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getBridge = new GetBridge();
         

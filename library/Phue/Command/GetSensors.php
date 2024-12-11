@@ -16,7 +16,6 @@ use Phue\Sensor;
  */
 class GetSensors implements CommandInterface
 {
-
     /**
      * Send command
      *
@@ -25,15 +24,15 @@ class GetSensors implements CommandInterface
      *
      * @return Sensor[] List of Sensor objects
      */
-    public function send(Client $client)
+    public function send(Client $client): array
     {
         // Get response
         $results = $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/sensors"
         );
         
-        $sensors = array();
-        
+        $sensors = [];
+
         foreach ($results as $sensorId => $attributes) {
             $sensors[$sensorId] = new Sensor($sensorId, $attributes, $client);
         }

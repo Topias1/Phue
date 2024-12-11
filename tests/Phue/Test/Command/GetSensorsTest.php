@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetSensors
  */
-class GetSensorsTest extends \PHPUnit_Framework_TestCase
+class GetSensorsTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getSensors = new GetSensors();
         

@@ -13,42 +13,42 @@ namespace Phue\Transport\Adapter;
  */
 interface AdapterInterface
 {
-
     /**
      * Opens the connection
+     *
+     * @return void
      */
-    public function open();
+    public function open(): void;
 
     /**
      * Sends request
      *
-     * @param string $address
-     *            Request path
-     * @param string $method
-     *            Request method
-     * @param string $body
-     *            Body data
+     * @param string $address Request path
+     * @param string $method  Request method
+     * @param string|null $body Body data
      *
      * @return string Result
      */
-    public function send($address, $method, $body = null);
+    public function send(string $address, string $method, ?string $body = null): string;
 
     /**
-     * Get http status code from response
+     * Get HTTP status code from response
      *
-     * @return string Status code
+     * @return int Status code
      */
-    public function getHttpStatusCode();
+    public function getHttpStatusCode(): int;
 
     /**
      * Get content type from response
      *
      * @return string Content type
      */
-    public function getContentType();
+    public function getContentType(): string;
 
     /**
      * Closes the connection
+     *
+     * @return void
      */
-    public function close();
+    public function close(): void;
 }

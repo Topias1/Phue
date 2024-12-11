@@ -16,7 +16,6 @@ use Phue\Scene;
  */
 class GetScenes implements CommandInterface
 {
-
     /**
      * Send command
      *
@@ -25,14 +24,14 @@ class GetScenes implements CommandInterface
      *
      * @return Scene[] List of Scene objects
      */
-    public function send(Client $client)
+    public function send(Client $client): array
     {
         // Get response
         $results = $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/scenes"
         );
         
-        $scenes = array();
+        $scenes = [];
         
         foreach ($results as $sceneId => $attributes) {
             $scenes[$sceneId] = new Scene($sceneId, $attributes, $client);

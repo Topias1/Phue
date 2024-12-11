@@ -13,13 +13,13 @@ use Phue\LightModel\AbstractLightModel;
 /**
  * Tests for Phue\LightModel\AbstractLightModel
  */
-class AbstractLightModelTest extends \PHPUnit_Framework_TestCase
+class AbstractLightModelTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockAbstractLightModel = $this->getMockForAbstractClass(

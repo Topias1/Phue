@@ -16,7 +16,7 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\UpdateSensorConfig
  */
-class UpdateSensorConfigTest extends \PHPUnit_Framework_TestCase
+class UpdateSensorConfigTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

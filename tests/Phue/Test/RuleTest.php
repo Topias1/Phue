@@ -14,7 +14,7 @@ use Phue\Rule;
 /**
  * Tests for Phue\Rule
  */
-class RuleTest extends \PHPUnit_Framework_TestCase
+class RuleTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -22,7 +22,7 @@ class RuleTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Phue\Rule::__construct
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockClient = $this->createMock('\Phue\Client', 

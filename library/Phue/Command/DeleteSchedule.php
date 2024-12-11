@@ -16,19 +16,17 @@ use Phue\Transport\TransportInterface;
  */
 class DeleteSchedule implements CommandInterface
 {
-
     /**
      * Schedule Id
      *
      * @var string
      */
-    protected $scheduleId;
+    protected string $scheduleId;
 
     /**
      * Constructs a command
      *
-     * @param mixed $schedule
-     *            Schedule Id or Schedule object
+     * @param mixed $schedule Schedule Id or Schedule object
      */
     public function __construct($schedule)
     {
@@ -38,10 +36,9 @@ class DeleteSchedule implements CommandInterface
     /**
      * Send command
      *
-     * @param Client $client
-     *            Phue Client
+     * @param Client $client Phue Client
      */
-    public function send(Client $client)
+    public function send(Client $client): void
     {
         $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/schedules/{$this->scheduleId}",

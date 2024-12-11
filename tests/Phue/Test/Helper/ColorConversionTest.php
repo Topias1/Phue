@@ -12,7 +12,7 @@ use Phue\Helper\ColorConversion;
 /**
  * Tests for Phue\Helper\ColorConversion
  */
-class ColorConversionTest extends \PHPUnit_Framework_TestCase
+class ColorConversionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test: convert RGB to XY and brightness

@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetLights
  */
-class GetLightsTest extends \PHPUnit_Framework_TestCase
+class GetLightsTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getLights = new GetLights();
         

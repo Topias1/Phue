@@ -16,27 +16,26 @@ use Phue\Transport\TransportInterface;
  */
 class CreateScene implements CommandInterface
 {
-
     /**
      * Name
      *
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Lights
      *
-     * @var array List of light Ids
+     * @var string[] List of light Ids
      */
-    protected $lights = array();
+    protected array $lights = [];
 
     /**
      * Transition time
      *
-     * @var mixed
+     * @var int|null
      */
-    protected $transitionTime = null;
+    protected ?int $transitionTime = null;
 
     /**
      * Constructs a command
@@ -48,7 +47,7 @@ class CreateScene implements CommandInterface
      * @param array $lights
      *            List of light Ids or Light objects
      */
-    public function __construct($id, $name, array $lights = array())
+    public function __construct(string $id, string $name, array $lights = [])
     {
         $this->id($id);
         $this->name($name);
@@ -63,10 +62,9 @@ class CreateScene implements CommandInterface
      *
      * @return self This object
      */
-    public function id($id)
+    public function id(string $id): self
     {
-        $this->id = (string) $id;
-        
+        $this->id = $id;
         return $this;
     }
 
@@ -78,25 +76,23 @@ class CreateScene implements CommandInterface
      *
      * @return self This object
      */
-    public function name($name)
+    public function name(string $name): self
     {
-        $this->name = (string) $name;
-        
+        $this->name = $name;
         return $this;
     }
 
     /**
      * Set lights
      *
-     * @param array $lights
+     * @param string[] $lights
      *            List of light Ids or Light objects
      *
      * @return self This object
      */
-    public function lights(array $lights = array())
+    public function lights(array $lights = []): self
     {
-        $this->lights = array();
-        // Iterate through each light and append id to scene list
+        $this->lights = [];
         foreach ($lights as $light) {
             $this->lights[] = (string) $light;
         }
@@ -107,21 +103,18 @@ class CreateScene implements CommandInterface
     /**
      * Set transition time
      *
-     * @param double $seconds
+     * @param float $seconds
      *            Time in seconds
      *
      * @return self This object
      */
-    public function transitionTime($seconds)
+    public function transitionTime(float $seconds): self
     {
-        // Don't continue if seconds is not valid
-        if ((double) $seconds < 0) {
+        if ($seconds < 0) {
             throw new \InvalidArgumentException('Time must be at least 0');
         }
         
-        // Value is in 1/10 seconds
         $this->transitionTime = (int) ($seconds * 10);
-        
         return $this;
     }
 
@@ -133,12 +126,12 @@ class CreateScene implements CommandInterface
      *
      * @return string Scene Id
      */
-    public function send(Client $client)
+    public function send(Client $client): string
     {
-        $body = (object) array(
+        $body = (object) [
             'name' => $this->name,
             'lights' => $this->lights
-        );
+        ];
         
         if ($this->transitionTime !== null) {
             $body->transitiontime = $this->transitionTime;

@@ -14,13 +14,13 @@ use Phue\User;
 /**
  * Tests for Phue\User
  */
-class UserTest extends \PHPUnit_Framework_TestCase
+class UserTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockClient = $this->createMock('\Phue\Client', 

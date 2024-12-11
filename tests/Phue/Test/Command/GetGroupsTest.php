@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetGroups
  */
-class GetGroupsTest extends \PHPUnit_Framework_TestCase
+class GetGroupsTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getGroups = new GetGroups();
         

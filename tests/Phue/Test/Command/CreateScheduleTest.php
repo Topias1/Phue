@@ -16,13 +16,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\CreateSchedule
  */
-class CreateScheduleTest extends \PHPUnit_Framework_TestCase
+class CreateScheduleTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Ensure proper timezone
         date_default_timezone_set('UTC');

@@ -13,25 +13,26 @@ namespace Phue\Transport\Adapter;
  */
 class Streaming implements AdapterInterface
 {
-
     /**
      * Stream context
      *
-     * @var resource
+     * @var resource|null
      */
-    protected $streamContext;
+    protected ?resource $streamContext = null;
 
     /**
      * File stream
      *
-     * @var resource
+     * @var resource|null
      */
-    protected $fileStream;
+    protected ?resource $fileStream = null;
 
     /**
      * Opens the connection
+     *
+     * @return void
      */
-    public function open()
+    public function open(): void
     {
         // Deliberately do nothing
     }
@@ -39,92 +40,88 @@ class Streaming implements AdapterInterface
     /**
      * Sends request
      *
-     * @param string $address
-     *            Request path
-     * @param string $method
-     *            Request method
-     * @param string $body
-     *            Body data
+     * @param string $address Request path
+     * @param string $method Request method
+     * @param string|null $body Body data
      *
-     * @return string Result
+     * @return string|false Result or false on failure
      */
-    public function send($address, $method, $body = null)
+    public function send(string $address, string $method, ?string $body = null)
     {
         // Init stream options
-        $streamOptions = array(
+        $streamOptions = [
             'ignore_errors' => true,
-            'method' => $method
-        );
-        
+            'method' => $method,
+        ];
+
         // Set body if there is one
-        if (strlen($body)) {
+        if ($body !== null && strlen($body)) {
             $streamOptions['content'] = $body;
         }
-        
-        $this->streamContext = stream_context_create(
-            array(
-                'http' => $streamOptions
-            )
-        );
-        
+
+        $this->streamContext = stream_context_create([
+            'http' => $streamOptions
+        ]);
+
         // Make request
-            $this->fileStream = @fopen($address, 'r', false, $this->streamContext);
-        
-            return $this->fileStream ? stream_get_contents($this->fileStream) : false;
+        $this->fileStream = @fopen($address, 'r', false, $this->streamContext);
+
+        return $this->fileStream ? stream_get_contents($this->fileStream) : false;
     }
 
     /**
      * Get response http status code
      *
-     * @return string Response http code
+     * @return int|string|false Response HTTP code or false on failure
      */
     public function getHttpStatusCode()
     {
-        preg_match('#^HTTP/1\.1 (\d+)#mi', $this->getHeaders(), $matches);
-        
-        return isset($matches[1]) ? $matches[1] : false;
+        $headers = $this->getHeaders();
+        preg_match('#^HTTP/1\.1 (\d+)#mi', $headers, $matches);
+
+        return isset($matches[1]) ? (int)$matches[1] : false;
     }
 
     /**
      * Get response content type
      *
-     * @return string Response content type
+     * @return string|false Response content type or false on failure
      */
     public function getContentType()
     {
-        preg_match('#^Content-type: ([^;]+?)$#mi', $this->getHeaders(), $matches);
-        
+        $headers = $this->getHeaders();
+        preg_match('#^Content-type: ([^;]+?)$#mi', $headers, $matches);
+
         return isset($matches[1]) ? $matches[1] : false;
     }
 
     /**
      * Get headers
      *
-     * @return string Headers
+     * @return string|null Headers or null if file stream is invalid
      */
-    public function getHeaders()
+    public function getHeaders(): ?string
     {
         // Don't continue if file stream isn't valid
-        if (! $this->fileStream) {
-            return;
+        if ($this->fileStream === null) {
+            return null;
         }
-        
-        $meta_data = stream_get_meta_data($this->fileStream);
-        return implode(
-            $meta_data['wrapper_data'],
-            "\r\n"
-        );
+
+        $metaData = stream_get_meta_data($this->fileStream);
+        return implode("\r\n", $metaData['wrapper_data']);
     }
 
     /**
      * Closes the streaming connection
+     *
+     * @return void
      */
-    public function close()
+    public function close(): void
     {
         if (is_resource($this->fileStream)) {
             fclose($this->fileStream);
         }
-        
+
         $this->streamContext = null;
     }
 }

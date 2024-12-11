@@ -16,16 +16,14 @@ use Phue\Bridge;
  */
 class GetBridge implements CommandInterface
 {
-
     /**
      * Send command
      *
-     * @param Client $client
-     *            Phue Client
+     * @param Client $client Phue Client
      *
      * @return Bridge Bridge object
      */
-    public function send(Client $client)
+    public function send(Client $client): Bridge
     {
         // Get response
         $response = $client->getTransport()->sendRequest(
