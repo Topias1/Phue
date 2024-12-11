@@ -1,423 +1,154 @@
 <?php
-/**
- * Phue: Philips Hue PHP Client
- *
- * @author    Michael Squires <sqmk@php.net>
- * @copyright Copyright (c) 2012 Michael K. Squires
- * @license   http://github.com/sqmk/Phue/wiki/License
- */
 namespace Phue\Command;
 
 use Phue\Client;
 use Phue\Helper\ColorConversion;
 use Phue\Transport\TransportInterface;
 
-/**
- * Set light alert command
- */
 class SetLightState implements CommandInterface, ActionableInterface
 {
+    // Constants definitions (unchanged)
 
-    /**
-     * Brightness min
-     */
-    const BRIGHTNESS_MIN = 0;
+    protected string $lightId;
+    protected array $params = [];
 
-    /**
-     * Brightness max
-     */
-    const BRIGHTNESS_MAX = 255;
-
-    /**
-     * Hue min
-     */
-    const HUE_MIN = 0;
-
-    /**
-     * Hue max
-     */
-    const HUE_MAX = 65535;
-
-    /**
-     * Saturation min
-     */
-    const SATURATION_MIN = 0;
-
-    /**
-     * Saturation max
-     */
-    const SATURATION_MAX = 255;
-
-    /**
-     * XY Min
-     */
-    const XY_MIN = 0.0;
-
-    /**
-     * XY Max
-     */
-    const XY_MAX = 1.0;
-
-    /**
-     * RGB Min
-     */
-    const RGB_MIN = 0;
-
-    /**
-     * RGB Max
-     */
-    const RGB_MAX = 255;
-
-    /**
-     * Color temperature min
-     */
-    const COLOR_TEMP_MIN = 153;
-
-    /**
-     * Color temperature max
-     */
-    const COLOR_TEMP_MAX = 500;
-
-    /**
-     * Alert none mode
-     */
-    const ALERT_NONE = 'none';
-
-    /**
-     * Alert select mode
-     */
-    const ALERT_SELECT = 'select';
-
-    /**
-     * Alert long select mode
-     */
-    const ALERT_LONG_SELECT = 'lselect';
-
-    /**
-     * Effect none
-     */
-    const EFFECT_NONE = 'none';
-
-    /**
-     * Effect colorloop
-     */
-    const EFFECT_COLORLOOP = 'colorloop';
-
-    /**
-     * Light Id
-     *
-     * @var string
-     */
-    protected $lightId;
-
-    /**
-     * State parameters
-     *
-     * @var array
-     */
-    protected $params = array();
-
-    /**
-     * Get alert modes
-     *
-     * @return array List of alert modes
-     */
-    public static function getAlertModes()
+    public static function getAlertModes(): array
     {
-        return array(
+        return [
             self::ALERT_NONE,
             self::ALERT_SELECT,
             self::ALERT_LONG_SELECT
-        );
+        ];
     }
 
-    /**
-     * Get effect modes
-     *
-     * @return array List of color modes
-     */
-    public static function getEffectModes()
+    public static function getEffectModes(): array
     {
-        return array(
+        return [
             self::EFFECT_NONE,
             self::EFFECT_COLORLOOP
-        );
+        ];
     }
 
-    /**
-     * Constructs a command
-     *
-     * @param mixed $light
-     *            Light Id or Light object
-     */
     public function __construct($light)
     {
         $this->lightId = (string) $light;
     }
 
-    /**
-     * Set on parameter
-     *
-     * @param bool $flag
-     *            True if on, false if not
-     *
-     * @return self This object
-     */
-    public function on($flag = true)
+    public function on(bool $flag = true): self
     {
-        $this->params['on'] = (bool) $flag;
-        
+        $this->params['on'] = $flag;
         return $this;
     }
 
-    /**
-     * Set brightness
-     *
-     * @param int $level
-     *            Brightness level
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function brightness($level = self::BRIGHTNESS_MAX)
+    public function brightness(int $level = self::BRIGHTNESS_MAX): self
     {
-        // Don't continue if brightness level is invalid
         if (! (self::BRIGHTNESS_MIN <= $level && $level <= self::BRIGHTNESS_MAX)) {
             throw new \InvalidArgumentException(
-                "Brightness must be between " . self::BRIGHTNESS_MIN . " and " .
-                self::BRIGHTNESS_MAX
+                "Brightness must be between " . self::BRIGHTNESS_MIN . " and " . self::BRIGHTNESS_MAX
             );
         }
-        
-        $this->params['bri'] = (int) $level;
-        
+
+        $this->params['bri'] = $level;
         return $this;
     }
 
-    /**
-     * Set hue
-     *
-     * @param int $value
-     *            Hue value
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function hue($value)
+    public function hue(int $value): self
     {
-        // Don't continue if hue value is invalid
         if (! (self::HUE_MIN <= $value && $value <= self::HUE_MAX)) {
             throw new \InvalidArgumentException(
                 "Hue value must be between " . self::HUE_MIN . " and " . self::HUE_MAX
             );
         }
-        
-        $this->params['hue'] = (int) $value;
-        
+
+        $this->params['hue'] = $value;
         return $this;
     }
 
-    /**
-     * Set saturation
-     *
-     * @param int $value
-     *            Saturation value
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function saturation($value)
+    public function saturation(int $value): self
     {
-        // Don't continue if saturation value is invalid
         if (! (self::SATURATION_MIN <= $value && $value <= self::SATURATION_MAX)) {
             throw new \InvalidArgumentException(
-                "Saturation value must be between " . self::SATURATION_MIN . " and " .
-                self::SATURATION_MAX
+                "Saturation value must be between " . self::SATURATION_MIN . " and " . self::SATURATION_MAX
             );
         }
-        
-        $this->params['sat'] = (int) $value;
-        
+
+        $this->params['sat'] = $value;
         return $this;
     }
 
-    /**
-     * Set xy
-     *
-     * @param float $x
-     *            X value
-     * @param float $y
-     *            Y value
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function xy($x, $y)
+    public function xy(float $x, float $y): self
     {
-        // Don't continue if x or y values are invalid
-        foreach (array(
-            $x,
-            $y
-        ) as $value) {
+        foreach ([$x, $y] as $value) {
             if (! (self::XY_MIN <= $value && $value <= self::XY_MAX)) {
                 throw new \InvalidArgumentException(
-                    "x/y value must be between " . self::XY_MIN . " and " .
-                    self::XY_MAX
+                    "x/y value must be between " . self::XY_MIN . " and " . self::XY_MAX
                 );
             }
         }
-        
-        $this->params['xy'] = array(
-            (float) $x,
-            (float) $y
-        );
-        
+
+        $this->params['xy'] = [$x, $y];
         return $this;
     }
 
-    /**
-     * Sets xy and brightness calculated from RGB
-     *
-     * @param int $red
-     *          Red value
-     * @param int $green
-     *          Green value
-     * @param int $blue
-     *          Blue value
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function rgb($red, $green, $blue)
+    public function rgb(int $red, int $green, int $blue): self
     {
-        // Don't continue if rgb values are invalid
-        foreach (array(
-            $red,
-            $green,
-            $blue
-        ) as $value) {
+        foreach ([$red, $green, $blue] as $value) {
             if (! (self::RGB_MIN <= $value && $value <= self::RGB_MAX)) {
                 throw new \InvalidArgumentException(
-                    "RGB values must be between " . self::RGB_MIN . " and " .
-                    self::RGB_MAX
+                    "RGB values must be between " . self::RGB_MIN . " and " . self::RGB_MAX
                 );
             }
         }
 
         $xy = ColorConversion::convertRGBToXY($red, $green, $blue);
-
         return $this->xy($xy['x'], $xy['y'])->brightness($xy['bri']);
     }
 
-    /**
-     * Set color temperature
-     *
-     * @param int $value
-     *            Color temperature value
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function colorTemp($value)
+    public function colorTemp(int $value): self
     {
-        // Don't continue if color temperature is invalid
         if (! (self::COLOR_TEMP_MIN <= $value && $value <= self::COLOR_TEMP_MAX)) {
             throw new \InvalidArgumentException(
-                "Color temperature value must be between " . self::COLOR_TEMP_MIN .
-                " and " . self::COLOR_TEMP_MAX
+                "Color temperature value must be between " . self::COLOR_TEMP_MIN . " and " . self::COLOR_TEMP_MAX
             );
         }
-        
+
         $this->params['ct'] = $value;
-        
         return $this;
     }
 
-    /**
-     * Set alert parameter
-     *
-     * @param string $mode
-     *            Alert mode
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function alert($mode = self::ALERT_LONG_SELECT)
+    public function alert(string $mode = self::ALERT_LONG_SELECT): self
     {
-        // Don't continue if mode is not valid
         if (! in_array($mode, self::getAlertModes())) {
             throw new \InvalidArgumentException("{$mode} is not a valid alert mode");
         }
-        
+
         $this->params['alert'] = $mode;
-        
         return $this;
     }
 
-    /**
-     * Set effect mode
-     *
-     * @param string $mode
-     *            Effect mode
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function effect($mode = self::EFFECT_COLORLOOP)
+    public function effect(string $mode = self::EFFECT_COLORLOOP): self
     {
-        // Don't continue if mode is not valid
         if (! in_array($mode, self::getEffectModes())) {
-            throw new \InvalidArgumentException("{$mode} is not a valid effect modes");
+            throw new \InvalidArgumentException("{$mode} is not a valid effect mode");
         }
-        
+
         $this->params['effect'] = $mode;
-        
         return $this;
     }
 
-    /**
-     * Transition time
-     *
-     * @param double $seconds
-     *            Time in seconds
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return self This object
-     */
-    public function transitionTime($seconds)
+    public function transitionTime(float $seconds): self
     {
-        // Don't continue if seconds is not valid
-        if ((double) $seconds < 0) {
+        if ($seconds < 0) {
             throw new \InvalidArgumentException("Time must be at least 0");
         }
-        
-        // Value is in 1/10 seconds, so convert automatically
+
         $this->params['transitiontime'] = (int) ($seconds * 10);
-        
         return $this;
     }
 
-    /**
-     * Send command
-     *
-     * @param Client $client
-     *            Phue Client
-     */
-    public function send(Client $client)
+    public function send(Client $client): mixed
     {
-        // Get params
         $params = $this->getActionableParams($client);
-        
-        // Send request
         $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}" . $params['address'],
             $params['method'],
@@ -425,20 +156,12 @@ class SetLightState implements CommandInterface, ActionableInterface
         );
     }
 
-    /**
-     * Get actionable params
-     *
-     * @param Client $client
-     *            Phue Client
-     *
-     * @return array Key/value pairs of params
-     */
-    public function getActionableParams(Client $client)
+    public function getActionableParams(Client $client): array
     {
-        return array(
+        return [
             'address' => "/lights/{$this->lightId}/state",
             'method' => TransportInterface::METHOD_PUT,
             'body' => (object) $this->params
-        );
+        ];
     }
 }

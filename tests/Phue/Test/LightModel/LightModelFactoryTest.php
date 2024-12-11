@@ -13,7 +13,7 @@ use Phue\LightModel\LightModelFactory;
 /**
  * Tests for Phue\LightModel\LightModelFactory
  */
-class LightModelFactoryTest extends \PHPUnit_Framework_TestCase
+class LightModelFactoryTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

@@ -16,35 +16,33 @@ use Phue\Transport\TransportInterface;
  */
 class CreateSensor implements CommandInterface
 {
-
     /**
      * Sensor attributes
      *
      * @var array
      */
-    protected $attributes = array();
+    protected array $attributes = [];
 
     /**
      * Sensor state
      *
      * @var array
      */
-    protected $state = array();
+    protected array $state = [];
 
     /**
      * Config
      *
      * @var array
      */
-    protected $config = array();
+    protected array $config = [];
 
     /**
      * Constructs a command
      *
-     * @param string $name
-     *            Name
+     * @param string|null $name Name
      */
-    public function __construct($name = null)
+    public function __construct(?string $name = null)
     {
         $this->name($name);
     }
@@ -52,14 +50,13 @@ class CreateSensor implements CommandInterface
     /**
      * Set name
      *
-     * @param string $name
-     *            Name
+     * @param string $name Name
      *
      * @return self This object
      */
-    public function name($name)
+    public function name(string $name): self
     {
-        $this->attributes['name'] = (string) $name;
+        $this->attributes['name'] = $name;
         
         return $this;
     }
@@ -67,14 +64,13 @@ class CreateSensor implements CommandInterface
     /**
      * Set model Id
      *
-     * @param string $modelId
-     *            Model Id
+     * @param string $modelId Model Id
      *
      * @return self This object
      */
-    public function modelId($modelId)
+    public function modelId(string $modelId): self
     {
-        $this->attributes['modelid'] = (string) $modelId;
+        $this->attributes['modelid'] = $modelId;
         
         return $this;
     }
@@ -82,14 +78,13 @@ class CreateSensor implements CommandInterface
     /**
      * Set software version
      *
-     * @param string $softwareVersion
-     *            Software version
+     * @param string $softwareVersion Software version
      *
      * @return self This object
      */
-    public function softwareVersion($softwareVersion)
+    public function softwareVersion(string $softwareVersion): self
     {
-        $this->attributes['swversion'] = (string) $softwareVersion;
+        $this->attributes['swversion'] = $softwareVersion;
         
         return $this;
     }
@@ -97,14 +92,13 @@ class CreateSensor implements CommandInterface
     /**
      * Set type
      *
-     * @param string $type
-     *            Type of sensor
+     * @param string $type Type of sensor
      *
      * @return self This object
      */
-    public function type($type)
+    public function type(string $type): self
     {
-        $this->attributes['type'] = (string) $type;
+        $this->attributes['type'] = $type;
         
         return $this;
     }
@@ -112,14 +106,13 @@ class CreateSensor implements CommandInterface
     /**
      * Set unique Id
      *
-     * @param string $uniqueId
-     *            Unique Id
+     * @param string $uniqueId Unique Id
      *
      * @return self This object
      */
-    public function uniqueId($uniqueId)
+    public function uniqueId(string $uniqueId): self
     {
-        $this->attributes['uniqueid'] = (string) $uniqueId;
+        $this->attributes['uniqueid'] = $uniqueId;
         
         return $this;
     }
@@ -127,14 +120,13 @@ class CreateSensor implements CommandInterface
     /**
      * Set manufacturer name
      *
-     * @param string $manufacturerName
-     *            Manufacturer name
+     * @param string $manufacturerName Manufacturer name
      *
      * @return self This object
      */
-    public function manufacturerName($manufacturerName)
+    public function manufacturerName(string $manufacturerName): self
     {
-        $this->attributes['manufacturername'] = (string) $manufacturerName;
+        $this->attributes['manufacturername'] = $manufacturerName;
         
         return $this;
     }
@@ -142,14 +134,12 @@ class CreateSensor implements CommandInterface
     /**
      * State attribute
      *
-     * @param string $key
-     *            Key
-     * @param mixed $value
-     *            Value
+     * @param string $key Key
+     * @param mixed $value Value
      *
      * @return self This object
      */
-    public function stateAttribute($key, $value)
+    public function stateAttribute(string $key, $value): self
     {
         $this->state[$key] = $value;
         
@@ -159,14 +149,12 @@ class CreateSensor implements CommandInterface
     /**
      * Config attribute
      *
-     * @param string $key
-     *            Key
-     * @param mixed $value
-     *            Value
+     * @param string $key Key
+     * @param mixed $value Value
      *
      * @return self This object
      */
-    public function configAttribute($key, $value)
+    public function configAttribute(string $key, $value): self
     {
         $this->config[$key] = $value;
         
@@ -176,25 +164,24 @@ class CreateSensor implements CommandInterface
     /**
      * Send command
      *
-     * @param Client $client
-     *            Phue Client
+     * @param Client $client Phue Client
      *
      * @return int Sensor Id
      */
-    public function send(Client $client)
+    public function send(Client $client): int
     {
         $response = $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/sensors",
             TransportInterface::METHOD_POST,
             (object) array_merge(
                 $this->attributes,
-                array(
+                [
                     'state' => $this->state,
                     'config' => $this->config
-                )
+                ]
             )
         );
         
-                return $response->id;
+        return (int) $response->id;
     }
 }

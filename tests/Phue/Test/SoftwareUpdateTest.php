@@ -14,7 +14,7 @@ use Phue\SoftwareUpdate;
 /**
  * Tests for Phue\SoftwareUpdate
  */
-class SoftwareUpdateTest extends \PHPUnit_Framework_TestCase
+class SoftwareUpdateTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -22,7 +22,7 @@ class SoftwareUpdateTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Phue\SoftwareUpdate::__construct
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockClient = $this->createMock('\Phue\Client', 

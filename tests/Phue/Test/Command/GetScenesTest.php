@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetScenes
  */
-class GetScenesTest extends \PHPUnit_Framework_TestCase
+class GetScenesTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getScenes = new GetScenes();
         

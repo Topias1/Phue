@@ -14,13 +14,13 @@ use Phue\Schedule;
 /**
  * Tests for Phue\Schedule
  */
-class ScheduleTest extends \PHPUnit_Framework_TestCase
+class ScheduleTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Force default timezone
         date_default_timezone_set('UTC');

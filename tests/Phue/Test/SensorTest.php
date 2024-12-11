@@ -14,7 +14,7 @@ use Phue\Sensor;
 /**
  * Tests for Phue\Sensor
  */
-class SensorTest extends \PHPUnit_Framework_TestCase
+class SensorTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -22,7 +22,7 @@ class SensorTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Phue\Sensor::__construct
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockClient = $this->createMock('\Phue\Client', 

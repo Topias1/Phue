@@ -16,7 +16,6 @@ use Phue\Schedule;
  */
 class GetSchedules implements CommandInterface
 {
-
     /**
      * Send command
      *
@@ -25,15 +24,15 @@ class GetSchedules implements CommandInterface
      *
      * @return Schedule[] List of Schedule objects
      */
-    public function send(Client $client)
+    public function send(Client $client): array
     {
         // Get response
         $response = $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/schedules"
         );
         
-        $schedules = array();
-        
+        $schedules = [];
+
         foreach ($response as $scheduleId => $attributes) {
             $schedules[$scheduleId] = new Schedule($scheduleId, $attributes, $client);
         }

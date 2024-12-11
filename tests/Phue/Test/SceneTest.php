@@ -14,7 +14,7 @@ use Phue\Scene;
 /**
  * Tests for Phue\Scene
  */
-class SceneTest extends \PHPUnit_Framework_TestCase
+class SceneTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -22,7 +22,7 @@ class SceneTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Phue\Scene::__construct
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockClient = $this->createMock('\Phue\Client', 

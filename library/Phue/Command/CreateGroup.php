@@ -22,24 +22,22 @@ class CreateGroup implements CommandInterface
      *
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Lights
      *
      * @var array List of light Ids
      */
-    protected $lights = array();
+    protected array $lights = [];
 
     /**
      * Constructs a command
      *
-     * @param string $name
-     *            Name
-     * @param array $lights
-     *            List of light Ids or Light objects
+     * @param string $name Name
+     * @param array $lights List of light Ids or Light objects
      */
-    public function __construct($name, array $lights = array())
+    public function __construct(string $name, array $lights = [])
     {
         $this->name($name);
         $this->lights($lights);
@@ -48,47 +46,38 @@ class CreateGroup implements CommandInterface
     /**
      * Set name
      *
-     * @param string $name
-     *            Name
-     *
+     * @param string $name Name
      * @return self This object
      */
-    public function name($name)
+    public function name(string $name)
     {
-        $this->name = (string) $name;
-        
+        $this->name = $name;
         return $this;
     }
 
     /**
      * Set lights
      *
-     * @param array $lights
-     *            List of light Ids or Light objects
-     *
+     * @param array $lights List of light Ids or Light objects
      * @return self This object
      */
-    public function lights(array $lights = array())
+    public function lights(array $lights = [])
     {
-        $this->lights = array();
-        
+        $this->lights = [];
         // Iterate through each light and append id to group list
         foreach ($lights as $light) {
             $this->lights[] = (string) $light;
         }
-        
         return $this;
     }
 
     /**
      * Send command
      *
-     * @param Client $client
-     *            Phue Client
-     *
+     * @param Client $client Phue Client
      * @return int Group Id
      */
-    public function send(Client $client)
+    public function send(Client $client): int
     {
         $response = $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/groups",
@@ -97,10 +86,9 @@ class CreateGroup implements CommandInterface
                 'name' => $this->name,
                 'lights' => $this->lights
             )
-        )
-            ;
-        
-            $r = explode('/', $response->id);
-            return $r[0];
+        );
+        //Extract and return the group ID
+        $r = explode('/', $response->id);
+        return (int) $r[0];
     }
 }

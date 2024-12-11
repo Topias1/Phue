@@ -13,29 +13,32 @@ namespace Phue\Transport\Adapter;
  */
 class Curl implements AdapterInterface
 {
-
     /**
      * cURL resource
      *
-     * @var resource
+     * @var resource|null
      */
-    protected $curl;
+    protected ?resource $curl = null;
 
     /**
      * Constructs a cURL adapter
+     *
+     * @throws \BadFunctionCallException if the cURL extension is not loaded
      */
     public function __construct()
     {
         // Throw exception if cURL extension is not loaded
-        if (! extension_loaded('curl')) {
+        if (!extension_loaded('curl')) {
             throw new \BadFunctionCallException('The cURL extension is required.');
         }
     }
 
     /**
      * Opens the connection
+     *
+     * @return void
      */
-    public function open()
+    public function open(): void
     {
         $this->curl = curl_init();
     }
@@ -43,38 +46,41 @@ class Curl implements AdapterInterface
     /**
      * Sends request
      *
-     * @param string $address
-     *            Request path
-     * @param string $method
-     *            Request method
-     * @param string $body
-     *            Body data
+     * @param string $address Request path
+     * @param string $method  Request method
+     * @param string|null $body Body data
      *
-     * @return string Result
+     * @return string The response result
      */
-    public function send($address, $method, $body = null)
+    public function send(string $address, string $method, ?string $body = null): string
     {
         // Set connection options
         curl_setopt($this->curl, CURLOPT_URL, $address);
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($this->curl, CURLOPT_HEADER, false);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-        
-        if (strlen($body)) {
+
+        if ($body !== null && strlen($body)) {
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
         }
-        
-        return curl_exec($this->curl);
+
+        $response = curl_exec($this->curl);
+
+        if ($response === false) {
+            throw new \RuntimeException('cURL error: ' . curl_error($this->curl));
+        }
+
+        return $response;
     }
 
     /**
-     * Get response http status code
+     * Get response HTTP status code
      *
-     * @return string Response http code
+     * @return int Response HTTP status code
      */
-    public function getHttpStatusCode()
+    public function getHttpStatusCode(): int
     {
-        return curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
+        return (int)curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
     }
 
     /**
@@ -82,17 +88,21 @@ class Curl implements AdapterInterface
      *
      * @return string Response content type
      */
-    public function getContentType()
+    public function getContentType(): string
     {
-        return curl_getinfo($this->curl, CURLINFO_CONTENT_TYPE);
+        return (string)curl_getinfo($this->curl, CURLINFO_CONTENT_TYPE);
     }
 
     /**
      * Closes the cURL connection
+     *
+     * @return void
      */
-    public function close()
+    public function close(): void
     {
-        curl_close($this->curl);
-        $this->curl = null;
+        if ($this->curl !== null) {
+            curl_close($this->curl);
+            $this->curl = null;
+        }
     }
 }

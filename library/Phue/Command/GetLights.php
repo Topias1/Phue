@@ -16,7 +16,6 @@ use Phue\Light;
  */
 class GetLights implements CommandInterface
 {
-
     /**
      * Send command
      *
@@ -25,14 +24,14 @@ class GetLights implements CommandInterface
      *
      * @return Light[] List of Light objects
      */
-    public function send(Client $client)
+    public function send(Client $client): array
     {
         // Get response
         $response = $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/lights"
         );
         
-        $lights = array();
+        $lights = [];
         
         foreach ($response as $lightId => $attributes) {
             $lights[$lightId] = new Light($lightId, $attributes, $client);

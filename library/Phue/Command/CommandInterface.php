@@ -24,5 +24,5 @@ interface CommandInterface
      *
      * @return mixed
      */
-    public function send(Client $client);
+    public function send(Client $client): mixed;
 }

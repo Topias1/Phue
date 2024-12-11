@@ -13,13 +13,13 @@ use Phue\SensorModel\AbstractSensorModel;
 /**
  * Tests for Phue\SensorModel\AbstractSensorModel
  */
-class AbstractSensorModelTest extends \PHPUnit_Framework_TestCase
+class AbstractSensorModelTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockAbstractSensorModel = $this->getMockForAbstractClass(

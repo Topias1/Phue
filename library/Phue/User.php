@@ -20,35 +20,35 @@ class User
      *
      * @var string
      */
-    protected $username;
+    protected string $username;
 
     /**
      * Attributes
      *
-     * @var \stdClass
+     * @var \stdClass|null
      */
-    protected $attributes;
+    protected ?\stdClass $attributes;
 
     /**
      * Phue client
      *
      * @var Client
      */
-    protected $client;
+    protected Client $client;
 
     /**
      * Construct a User object
      *
      * @param string $username
      *            Username
-     * @param \stdClass $attributes
+     * @param \stdClass|null $attributes
      *            User attributes
      * @param Client $client
      *            Phue client
      */
-    public function __construct($username, \stdClass $attributes, Client $client)
+    public function __construct(string $username, ?\stdClass $attributes, Client $client)
     {
-        $this->username = (string) $username;
+        $this->username = $username;
         $this->attributes = $attributes;
         $this->client = $client;
     }
@@ -58,7 +58,7 @@ class User
      *
      * @return string Username
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -68,9 +68,9 @@ class User
      *
      * @return string Device type
      */
-    public function getDeviceType()
+    public function getDeviceType(): string
     {
-        return $this->attributes->name;
+        return $this->attributes->name ?? 'Unknown';
     }
 
     /**
@@ -78,9 +78,9 @@ class User
      *
      * @return string Create date
      */
-    public function getCreateDate()
+    public function getCreateDate(): string
     {
-        return $this->attributes->{'create date'};
+        return $this->attributes->{'create date'} ?? 'Unknown';
     }
 
     /**
@@ -88,17 +88,17 @@ class User
      *
      * @return string Last use date
      */
-    public function getLastUseDate()
+    public function getLastUseDate(): string
     {
-        return $this->attributes->{'last use date'};
+        return $this->attributes->{'last use date'} ?? 'Unknown';
     }
 
     /**
      * Delete user
      */
-    public function delete()
+    public function delete(): void
     {
-        $this->client->sendCommand((new DeleteUser($this)));
+        $this->client->sendCommand(new DeleteUser($this));
     }
 
     /**
@@ -106,8 +106,8 @@ class User
      *
      * @return string Username
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return (string) $this->username;
+        return $this->username;
     }
 }

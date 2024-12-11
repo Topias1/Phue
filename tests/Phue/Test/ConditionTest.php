@@ -14,7 +14,7 @@ use Phue\Condition;
 /**
  * Tests for Phue\Condition
  */
-class ConditionTest extends \PHPUnit_Framework_TestCase
+class ConditionTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -23,7 +23,7 @@ class ConditionTest extends \PHPUnit_Framework_TestCase
      * @covers \Phue\Condition::__construct
      * @covers \Phue\Condition::import
      */
-    public function setUp()
+    public function setUp(): void
     {
         // $this->condition = new Condition((object) [
         // 'address' => '/sensors/2/state/buttonevent',

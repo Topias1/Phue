@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetRules
  */
-class GetRulesTest extends \PHPUnit_Framework_TestCase
+class GetRulesTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getRules = new GetRules();
         

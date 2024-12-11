@@ -18,48 +18,51 @@ use Phue\Transport\TransportInterface;
  */
 class CreateSchedule implements CommandInterface
 {
-
     /**
      * Schedule attributes
      *
      * @var array
      */
-    protected $attributes = array();
+    protected array $attributes = [];
 
     /**
      * Command
      *
-     * @var ActionableInterface
+     * @var ActionableInterface|null
      */
-    protected $command;
+    protected ?ActionableInterface $command = null;
 
     /**
      * Time pattern
      *
-     * @var TimePatternInterface
+     * @var TimePatternInterface|null
      */
-    protected $time;
+    protected ?TimePatternInterface $time = null;
 
     /**
      * Constructs a create schedule command
      *
-     * @param string $name
+     * @param string|null $name
      *            Name of schedule
      * @param mixed $time
      *            Time to run command
-     * @param ActionableInterface $command
+     * @param ActionableInterface|null $command
      *            Actionable command
      */
     public function __construct(
-        $name = null,
+        ?string $name = null,
         $time = null,
-        ActionableInterface $command = null
+        ?ActionableInterface $command = null
     ) {
-    
-        // Set name, time, command if passed
-        $name !== null && $this->name($name);
-        $time !== null && $this->time($time);
-        $command !== null && $this->command($command);
+        if ($name !== null) {
+            $this->name($name);
+        }
+        if ($time !== null) {
+            $this->time($time);
+        }
+        if ($command !== null) {
+            $this->command($command);
+        }
         
         // Copy description
         $this->description = $name;
@@ -73,9 +76,9 @@ class CreateSchedule implements CommandInterface
      *
      * @return self This object
      */
-    public function name($name)
+    public function name(string $name): self
     {
-        $this->attributes['name'] = (string) $name;
+        $this->attributes['name'] = $name;
         
         return $this;
     }
@@ -88,9 +91,9 @@ class CreateSchedule implements CommandInterface
      *
      * @return self This object
      */
-    public function description($description)
+    public function description(string $description): self
     {
-        $this->attributes['description'] = (string) $description;
+        $this->attributes['description'] = $description;
         
         return $this;
     }
@@ -98,14 +101,14 @@ class CreateSchedule implements CommandInterface
     /**
      * Set time
      *
-     * @param string $time
+     * @param mixed $time
      *            Time
      *
      * @return self This object
      */
-    public function time($time)
+    public function time($time): self
     {
-        if (! ($time instanceof TimePatternInterface)) {
+        if (!($time instanceof TimePatternInterface)) {
             $time = new AbsoluteTime((string) $time);
         }
         
@@ -122,7 +125,7 @@ class CreateSchedule implements CommandInterface
      *
      * @return self This object
      */
-    public function command(ActionableInterface $command)
+    public function command(ActionableInterface $command): self
     {
         $this->command = $command;
         
@@ -132,13 +135,13 @@ class CreateSchedule implements CommandInterface
     /**
      * Set status
      *
-     * @return string $status Status
+     * @param string $status Status
      *
      * @return self This object
      */
-    public function status($status)
+    public function status(string $status): self
     {
-        $this->attributes['status'] = (string) $status;
+        $this->attributes['status'] = $status;
         
         return $this;
     }
@@ -146,14 +149,13 @@ class CreateSchedule implements CommandInterface
     /**
      * Set autodelete
      *
-     * @param bool $flag
-     *            Flag
+     * @param bool $flag Flag
      *
      * @return self This object
      */
-    public function autodelete($flag)
+    public function autodelete(bool $flag): self
     {
-        $this->attributes['autodelete'] = (bool) $flag;
+        $this->attributes['autodelete'] = $flag;
         
         return $this;
     }
@@ -161,12 +163,11 @@ class CreateSchedule implements CommandInterface
     /**
      * Send command
      *
-     * @param Client $client
-     *            Phue Client
+     * @param Client $client Phue Client
      *
-     * @return int Schedule Id
+     * @return string Schedule Id
      */
-    public function send(Client $client)
+    public function send(Client $client): string
     {
         // Set command attribute if passed
         if ($this->command) {

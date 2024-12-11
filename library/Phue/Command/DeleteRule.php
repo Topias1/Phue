@@ -16,19 +16,17 @@ use Phue\Transport\TransportInterface;
  */
 class DeleteRule implements CommandInterface
 {
-
     /**
      * Rule Id
      *
      * @var string
      */
-    protected $ruleId;
+    protected string $ruleId;
 
     /**
      * Constructs a command
      *
-     * @param mixed $rule
-     *            Rule Id or Rule object
+     * @param mixed $rule Rule Id or Rule object
      */
     public function __construct($rule)
     {
@@ -38,10 +36,9 @@ class DeleteRule implements CommandInterface
     /**
      * Send command
      *
-     * @param Client $client
-     *            Phue Client
+     * @param Client $client Phue Client
      */
-    public function send(Client $client)
+    public function send(Client $client): void
     {
         $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/rules/{$this->ruleId}",

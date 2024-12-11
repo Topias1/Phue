@@ -16,13 +16,12 @@ use Phue\Schedule;
  */
 class GetScheduleById implements CommandInterface
 {
-
     /**
      * Schedule Id
      *
-     * @var string
+     * @var int
      */
-    protected $scheduleId;
+    protected int $scheduleId;
 
     /**
      * Constructs a command
@@ -30,9 +29,9 @@ class GetScheduleById implements CommandInterface
      * @param int $scheduleId
      *            Schedule Id
      */
-    public function __construct($scheduleId)
+    public function __construct(int $scheduleId)
     {
-        $this->scheduleId = (int) $scheduleId;
+        $this->scheduleId = $scheduleId;
     }
 
     /**
@@ -43,7 +42,7 @@ class GetScheduleById implements CommandInterface
      *
      * @return Schedule Schedule object
      */
-    public function send(Client $client)
+    public function send(Client $client): Schedule
     {
         // Get response
         $attributes = $client->getTransport()->sendRequest(

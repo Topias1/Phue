@@ -16,7 +16,7 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\UpdateRule
  */
-class UpdateRuleTest extends \PHPUnit_Framework_TestCase
+class UpdateRuleTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

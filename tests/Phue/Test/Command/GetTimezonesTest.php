@@ -15,13 +15,13 @@ use Phue\Transport\TransportInterface;
 /**
  * Tests for Phue\Command\GetTimezones
  */
-class GetTimezonesTest extends \PHPUnit_Framework_TestCase
+class GetTimezonesTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getTimezones = new GetTimezones();
         

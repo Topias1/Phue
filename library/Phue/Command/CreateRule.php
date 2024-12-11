@@ -17,35 +17,33 @@ use Phue\Transport\TransportInterface;
  */
 class CreateRule implements CommandInterface
 {
-
     /**
      * Name
      *
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Conditions
      *
-     * @var array
+     * @var Condition[]
      */
-    protected $conditions = array();
+    protected array $conditions = [];
 
     /**
      * Actions
      *
-     * @var array
+     * @var ActionableInterface[]
      */
-    protected $actions = array();
+    protected array $actions = [];
 
     /**
      * Constructs a command
      *
-     * @param string $name
-     *            Name
+     * @param string $name Name
      */
-    public function __construct($name = '')
+    public function __construct(string $name = '')
     {
         $this->name($name);
     }
@@ -53,78 +51,67 @@ class CreateRule implements CommandInterface
     /**
      * Set name
      *
-     * @param string $name
-     *            Name
+     * @param string $name Name
      *
      * @return self This object
      */
-    public function name($name)
+    public function name(string $name): self
     {
-        $this->name = (string) $name;
-        
+        $this->name = $name;
         return $this;
     }
 
     /**
      * Add condition
      *
-     * @param Condition $condition
-     *            Condition
+     * @param Condition $condition Condition
      *
      * @return self This object
      */
-    public function addCondition(Condition $condition)
+    public function addCondition(Condition $condition): self
     {
         $this->conditions[] = $condition;
-        
         return $this;
     }
 
     /**
      * Add actionable command
      *
-     * @param ActionableInterface $action
-     *            Actionable command
+     * @param ActionableInterface $action Actionable command
      *
      * @return self This object
      */
-    public function addAction(ActionableInterface $command)
+    public function addAction(ActionableInterface $action): self
     {
-        $this->actions[] = $command;
-        
+        $this->actions[] = $action;
         return $this;
     }
 
     /**
      * Send command
      *
-     * @param Client $client
-     *            Phue Client
+     * @param Client $client Phue Client
      *
-     * @return int Rule Id
+     * @return string Rule Id
      */
-    public function send(Client $client)
+    public function send(Client $client): string
     {
         $response = $client->getTransport()->sendRequest(
             "/api/{$client->getUsername()}/rules",
             TransportInterface::METHOD_POST,
-            (object) array(
+            (object) [
                 'name' => $this->name,
                 'conditions' => array_map(
-                    function ($condition) {
-                        return $condition->export();
-                    },
+                    fn($condition) => $condition->export(),
                     $this->conditions
                 ),
                 'actions' => array_map(
-                    function ($action) use ($client) {
-                        return $action->getActionableParams($client);
-                    },
+                    fn($action) => $action->getActionableParams($client),
                     $this->actions
                 )
-            )
+            ]
         );
         
-            return $response->id;
+        return (string) $response->id;
     }
 }

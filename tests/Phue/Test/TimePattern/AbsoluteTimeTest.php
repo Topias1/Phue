@@ -13,7 +13,7 @@ use Phue\TimePattern\AbsoluteTime;
 /**
  * Tests for Phue\TimePattern\AbsoluteTime
  */
-class AbsoluteTimeTest extends \PHPUnit_Framework_TestCase
+class AbsoluteTimeTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

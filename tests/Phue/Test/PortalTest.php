@@ -14,7 +14,7 @@ use Phue\Portal;
 /**
  * Tests for Phue\Portal
  */
-class PortalTest extends \PHPUnit_Framework_TestCase
+class PortalTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -22,7 +22,7 @@ class PortalTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Phue\Portal::__construct
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Mock client
         $this->mockClient = $this->createMock('\Phue\Client', 
